@@ -11,7 +11,8 @@ import {
   type UserResult,
   type RefreshTokenResult,
   getLogin,
-  refreshTokenApi
+  refreshTokenApi,
+  logout
 } from "@/api/user";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
@@ -23,8 +24,6 @@ export const useUserStore = defineStore({
     avatar: storageLocal().getItem<DataInfo<number>>(userKey)?.avatar ?? "",
     // 用户名
     username: storageLocal().getItem<DataInfo<number>>(userKey)?.username ?? "",
-    // 昵称
-    nickname: storageLocal().getItem<DataInfo<number>>(userKey)?.nickname ?? "",
     // 页面级别权限
     roles: storageLocal().getItem<DataInfo<number>>(userKey)?.roles ?? [],
     // 按钮级别权限
@@ -43,10 +42,6 @@ export const useUserStore = defineStore({
     /** 存储用户名 */
     SET_USERNAME(username: string) {
       this.username = username;
-    },
-    /** 存储昵称 */
-    SET_NICKNAME(nickname: string) {
-      this.nickname = nickname;
     },
     /** 存储角色 */
     SET_ROLES(roles: Array<string>) {
@@ -68,9 +63,22 @@ export const useUserStore = defineStore({
     async loginByUsername(data) {
       return new Promise<UserResult>((resolve, reject) => {
         getLogin(data)
-          .then(data => {
-            if (data?.success) setToken(data.data);
-            resolve(data);
+          .then(res => {
+            const { code, data } = res;
+            if (code == 200) {
+              setToken({
+                avatar: data.avatar,
+                refreshToken: data.refreshToken,
+                accessToken: data.accessToken,
+                expires: new Date(data.expires),
+                username: data.username,
+                roles: data.roles,
+                permissions: data.permissions
+              });
+              resolve(res);
+            } else {
+              reject(res);
+            }
           })
           .catch(error => {
             reject(error);
@@ -79,6 +87,7 @@ export const useUserStore = defineStore({
     },
     /** 前端登出（不调用接口） */
     logOut() {
+      logout();
       this.username = "";
       this.roles = [];
       this.permissions = [];

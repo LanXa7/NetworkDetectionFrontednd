@@ -1,14 +1,13 @@
 import { http } from "@/utils/http";
 
 export type UserResult = {
+  code: number;
   success: boolean;
   data: {
     /** 头像 */
     avatar: string;
     /** 用户名 */
     username: string;
-    /** 昵称 */
-    nickname: string;
     /** 当前登录用户的角色 */
     roles: Array<string>;
     /** 按钮级别权限 */
@@ -34,12 +33,21 @@ export type RefreshTokenResult = {
   };
 };
 
+export type LoginResult = {
+  code: number;
+  message: string;
+};
+
 /** 登录 */
 export const getLogin = (data?: object) => {
-  return http.request<UserResult>("post", "/login", { data });
+  return http.request<UserResult>("post", "/auth/login", { data });
 };
 
 /** 刷新`token` */
 export const refreshTokenApi = (data?: object) => {
   return http.request<RefreshTokenResult>("post", "/refresh-token", { data });
+};
+
+export const logout = () => {
+  return http.request<LoginResult>("get", "/auth/logout");
 };

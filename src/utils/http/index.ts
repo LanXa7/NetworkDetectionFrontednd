@@ -152,6 +152,8 @@ class PureHttp {
     param?: AxiosRequestConfig,
     axiosConfig?: PureHttpRequestConfig
   ): Promise<T> {
+    // 后续如果部署有nginx代理需要注释掉
+    url = "/api" + url;
     const config = {
       method,
       url,

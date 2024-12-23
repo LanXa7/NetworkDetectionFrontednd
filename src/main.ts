@@ -23,9 +23,9 @@ import "./assets/iconfont/iconfont.js";
 import "./assets/iconfont/iconfont.css";
 
 const app = createApp(App);
-
 // 自定义指令
 import * as directives from "@/directives";
+
 Object.keys(directives).forEach(key => {
   app.directive(key, (directives as { [key: string]: Directive })[key]);
 });
@@ -36,6 +36,7 @@ import {
   IconifyIconOnline,
   FontIcon
 } from "./components/ReIcon";
+
 app.component("IconifyIconOffline", IconifyIconOffline);
 app.component("IconifyIconOnline", IconifyIconOnline);
 app.component("FontIcon", FontIcon);
@@ -43,6 +44,7 @@ app.component("FontIcon", FontIcon);
 // 全局注册按钮级别权限组件
 import { Auth } from "@/components/ReAuth";
 import { Perms } from "@/components/RePerms";
+
 app.component("Auth", Auth);
 app.component("Perms", Perms);
 
@@ -50,6 +52,7 @@ app.component("Perms", Perms);
 import "tippy.js/dist/tippy.css";
 import "tippy.js/themes/light.css";
 import VueTippy from "vue-tippy";
+
 app.use(VueTippy);
 
 getPlatformConfig(app).then(async config => {

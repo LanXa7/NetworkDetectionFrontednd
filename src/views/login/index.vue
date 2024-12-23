@@ -43,14 +43,20 @@ const onLogin = async (formEl: FormInstance | undefined) => {
     if (valid) {
       loading.value = true;
       useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+        .loginByUsername({
+          username: ruleForm.username,
+          password: ruleForm.password
+        })
         .then(res => {
-          if (res.success) {
+          if (res.code == 200) {
             // 获取后端路由
             return initRouter().then(() => {
-              router.push(getTopMenu(true).path).then(() => {
+              router.push("/").then(() => {
                 message("登录成功", { type: "success" });
               });
+              // router.push(getTopMenu(true).path).then(() => {
+              //   message("登录成功", { type: "success" });
+              // });
             });
           } else {
             message("登录失败", { type: "error" });
