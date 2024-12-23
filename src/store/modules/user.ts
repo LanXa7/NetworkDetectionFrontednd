@@ -16,6 +16,7 @@ import {
 } from "@/api/user";
 import { useMultiTagsStoreHook } from "./multiTags";
 import { type DataInfo, setToken, removeToken, userKey } from "@/utils/auth";
+import { message } from "@/utils/message";
 
 export const useUserStore = defineStore({
   id: "pure-user",
@@ -70,7 +71,7 @@ export const useUserStore = defineStore({
                 avatar: data.avatar,
                 refreshToken: data.refreshToken,
                 accessToken: data.accessToken,
-                expires: new Date(data.expires),
+                expires: data.expires,
                 username: data.username,
                 roles: data.roles,
                 permissions: data.permissions
@@ -87,14 +88,16 @@ export const useUserStore = defineStore({
     },
     /** 前端登出（不调用接口） */
     logOut() {
-      logout();
-      this.username = "";
-      this.roles = [];
-      this.permissions = [];
-      removeToken();
-      useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
-      resetRouter();
-      router.push("/login");
+      logout().then(() => {
+        message("退出成功！", { type: "success" });
+        router.push("/login");
+        this.username = "";
+        this.roles = [];
+        this.permissions = [];
+        removeToken();
+        useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
+        resetRouter();
+      });
     },
     /** 刷新`token` */
     async handRefreshToken(data) {
