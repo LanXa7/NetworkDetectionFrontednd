@@ -11,7 +11,7 @@ import {
   type UserResult,
   type RefreshTokenResult,
   getLogin,
-  refreshTokenApi,
+  //  refreshTokenApi,
   logout
 } from "@/api/user";
 import { useMultiTagsStoreHook } from "./multiTags";
@@ -98,22 +98,22 @@ export const useUserStore = defineStore({
         useMultiTagsStoreHook().handleTags("equal", [...routerArrays]);
         resetRouter();
       });
-    },
-    /** 刷新`token` */
-    async handRefreshToken(data) {
-      return new Promise<RefreshTokenResult>((resolve, reject) => {
-        refreshTokenApi(data)
-          .then(data => {
-            if (data) {
-              setToken(data.data);
-              resolve(data);
-            }
-          })
-          .catch(error => {
-            reject(error);
-          });
-      });
     }
+    /** 刷新`token` */
+    // async handRefreshToken(data) {
+    //   return new Promise<RefreshTokenResult>((resolve, reject) => {
+    //     refreshTokenApi(data)
+    //       .then(data => {
+    //         if (data) {
+    //           setToken(data.data);
+    //           resolve(data);
+    //         }
+    //       })
+    //       .catch(error => {
+    //         reject(error);
+    //       });
+    //   });
+    // }
   }
 });
 
